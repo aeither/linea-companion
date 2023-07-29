@@ -1,10 +1,10 @@
 import { Bot } from "grammy";
+import dotenv from "dotenv";
+dotenv.config()
 
-// Create an instance of the `Bot` class and pass your bot token to it.
-const bot = new Bot(""); // <-- put your bot token between the ""
-
-// You can now register listeners on your bot object `bot`.
-// grammY will call the listeners when users send messages to your bot.
+if (!process.env.BOT_TOKEN) throw new Error('BOT_TOKEN not found')
+const BOT_TOKEN = process.env.BOT_TOKEN
+const bot = new Bot(BOT_TOKEN); 
 
 // Handle the /start command.
 bot.command("start", (ctx) => ctx.reply("Welcome! Up and running."));

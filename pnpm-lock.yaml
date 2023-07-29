@@ -1,11 +1,17 @@
 lockfileVersion: '6.0'
 
 dependencies:
+  dotenv:
+    specifier: ^16.3.1
+    version: 16.3.1
   grammy:
     specifier: ^1.17.2
     version: 1.17.2
 
 devDependencies:
+  '@types/node':
+    specifier: ^20.4.5
+    version: 20.4.5
   typescript:
     specifier: ^5.1.6
     version: 5.1.6
@@ -15,6 +21,10 @@ packages:
   /@grammyjs/types@3.1.2:
     resolution: {integrity: sha512-AsSkTUfZCfSEIacUBOQ94qLbZZy3UofkschWv4uBJKEHjuEfGnjeZZgiwhDfTDjmpmW+MbcasvS+FEfD2jiSLw==}
     dev: false
+
+  /@types/node@20.4.5:
+    resolution: {integrity: sha512-rt40Nk13II9JwQBdeYqmbn2Q6IVTA5uPhvSO+JVqdXw/6/4glI6oR9ezty/A9Hg5u7JH4OmYmuQ+XvjKm0Datg==}
+    dev: true
 
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -33,6 +43,11 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
+    dev: false
+
+  /dotenv@16.3.1:
+    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
+    engines: {node: '>=12'}
     dev: false
 
   /event-target-shim@5.0.1:
