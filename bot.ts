@@ -10,7 +10,7 @@ if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN not found");
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const bot = new Bot(BOT_TOKEN);
 
-let sdk: MetaMaskSDK | undefined;
+let sdk: MetaMaskSDK | undefined | null;
 
 // Utility functions
 function extractBase64Data(dataUrl: string) {
@@ -108,7 +108,9 @@ bot.command("stop", (ctx) => {
 
   // Close previous sessions
   //
+  sdk.disconnect();
   sdk.terminate();
+  sdk = null
   ctx.reply("Terminated");
 });
 
@@ -124,13 +126,17 @@ bot.on("message:text", async (ctx) => {
   const ulink = sdk.getUniversalLink();
   sdk.disconnect;
   console.log("🚀 ~ file: bot.ts:54 ~ bot.on ~ ulink:", ulink);
+  const activeEthereum  = sdk?.activeProvider
   const ethereum = sdk.getProvider();
+
+  console.log('activeProvider: ', typeof activeEthereum)
+  console.log('ethereum: ', typeof ethereum)
 
   const chainId = await ethereum.request<string>({
     method: "eth_chainId",
     params: [],
   });
-  console.debug("chainId", chainId)
+  console.debug("chainId: ", chainId);
   ctx.reply("Got another message!");
 });
 
