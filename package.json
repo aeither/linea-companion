@@ -1,4 +1,10 @@
 {
+	"name": "linea-companion-bot",
+	"version": "1.0.0",
+	"description": "Your Telegram Bot to access Linea Blockchain",
+	"main": "bot.js",
+	"keywords": [],
+	"author": "",
 	"scripts": {
 		"build": "tsc",
 		"start": "tsc && node bot.js",
