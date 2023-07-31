@@ -26,12 +26,13 @@ function extractBase64Data(dataUrl: string) {
 }
 
 // Handle the /start command.
-const connectKeyboard = new InlineKeyboard()
-  .text("gpt-3.5-turbo", "model:gpt-3.5-turbo")
-  .text("gpt-4", "model:gpt-4");
+const connectKeyboard = new InlineKeyboard().text(
+  "Open Metamask Mobile",
+  "connect:key"
+);
 
 // Handle the /start command.
-bot.command("start", async (ctx) => {
+bot.command("connect", async (ctx) => {
   const options: MetaMaskSDKOptions = {
     shouldShimWeb3: false,
     dappMetadata: {
@@ -58,12 +59,15 @@ bot.command("start", async (ctx) => {
             // console.log(url);
             const base64Data = extractBase64Data(url);
             if (!base64Data) return;
-            
+
             var imgbase = Buffer.from(base64Data, "base64");
             ctx.replyWithPhoto(new InputFile(imgbase, "filename"));
-            ctx.reply("Connect from mobile", {
-              reply_markup: connectKeyboard,
-            });
+            ctx.reply(
+              "Connect with QR from PC or use the button to connect from mobile",
+              {
+                reply_markup: connectKeyboard,
+              }
+            );
           })
           .catch((err) => {
             console.error(err);
@@ -88,13 +92,15 @@ bot.command("start", async (ctx) => {
   };
 
   sdk = new MetaMaskSDK(options);
+  console.debug("connecting...");
   const accounts = await sdk.connect();
-  console.log("🚀 ~ file: bot.ts:52 ~ bot.on ~ accounts:", accounts);
 
-  ctx.reply("Welcome! Up and running.");
+  console.debug("Accounts:", accounts);
+  ctx.reply(`Connected with ${accounts}`);
 });
 
-bot.command("stop", async (ctx) => {
+bot.command("stop", (ctx) => {
+  console.log("stop");
   if (!sdk) {
     ctx.reply("Start connection first");
     return;
@@ -107,22 +113,24 @@ bot.command("stop", async (ctx) => {
 });
 
 // Handle other messages.
-bot.on("message", async (ctx) => {
+bot.on("message:text", async (ctx) => {
   console.debug(`start NodeJS example`);
-  console.log(`start NodeJS example`);
 
   if (!sdk) {
     ctx.reply("Start connection first");
     return;
   }
-  const accounts = await sdk.connect();
-  console.log("🚀 ~ file: bot.ts:52 ~ bot.on ~ accounts:", accounts);
 
-  // const ulink = sdk.getUniversalLink();
-  // console.log("🚀 ~ file: bot.ts:54 ~ bot.on ~ ulink:", ulink);
+  const ulink = sdk.getUniversalLink();
+  sdk.disconnect;
+  console.log("🚀 ~ file: bot.ts:54 ~ bot.on ~ ulink:", ulink);
+  const ethereum = sdk.getProvider();
 
-  // console.log('connect request accounts', accounts);
-  // const ethereum = sdk.getProvider();
+  const chainId = await ethereum.request<string>({
+    method: "eth_chainId",
+    params: [],
+  });
+  console.debug("chainId", chainId)
   ctx.reply("Got another message!");
 });
 
