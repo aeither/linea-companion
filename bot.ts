@@ -10,6 +10,9 @@ if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN not found");
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const bot = new Bot(BOT_TOKEN);
 
+if (!process.env.INFURA_KEY) throw new Error("INFURA_KEY not found");
+const INFURA_KEY = process.env.INFURA_KEY;
+
 let sdk: MetaMaskSDK | undefined | null;
 
 // Utility functions
@@ -30,6 +33,36 @@ const connectKeyboard = new InlineKeyboard().text(
   "Open Metamask Mobile",
   "connect:key"
 );
+
+const menuKeyboard = new InlineKeyboard().text("Balance", "menu:balance");
+
+/**
+ * On callback, voice and text
+ */
+bot.callbackQuery("menu:balance", async (ctx) => {
+  let data;
+
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: '{"jsonrpc":"2.0","id":1,"method":"eth_blockNumber","params":[]}',
+  };
+
+  try {
+    const response = await fetch(
+      `https://linea-mainnet.infura.io/v3/${INFURA_KEY}`,
+      options
+    );
+    data = await response.json();
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
+
+  ctx.reply(`Your balance is: `);
+
+  ctx.answerCallbackQuery(); // remove loading animation
+});
 
 // Handle the /start command.
 bot.command("connect", async (ctx) => {
@@ -110,7 +143,7 @@ bot.command("stop", (ctx) => {
   //
   sdk.disconnect();
   sdk.terminate();
-  sdk = null
+  sdk = null;
   ctx.reply("Terminated");
 });
 
@@ -126,18 +159,18 @@ bot.on("message:text", async (ctx) => {
   const ulink = sdk.getUniversalLink();
   sdk.disconnect;
   console.log("🚀 ~ file: bot.ts:54 ~ bot.on ~ ulink:", ulink);
-  const activeEthereum  = sdk?.activeProvider
+  const activeEthereum = sdk?.activeProvider;
   const ethereum = sdk.getProvider();
 
-  console.log('activeProvider: ', typeof activeEthereum)
-  console.log('ethereum: ', typeof ethereum)
+  console.log("activeProvider: ", typeof activeEthereum);
+  console.log("ethereum: ", typeof ethereum);
 
   const chainId = await ethereum.request<string>({
     method: "eth_chainId",
     params: [],
   });
   console.debug("chainId: ", chainId);
-  ctx.reply("Got another message!");
+  ctx.reply("Got another message!", { reply_markup: menuKeyboard });
 });
 
 // Now that you specified how to handle messages, you can start your bot.
