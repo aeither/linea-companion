@@ -7,6 +7,8 @@ import {
   conversations,
   createConversation,
 } from "@grammyjs/conversations";
+import { Menu } from "@grammyjs/menu";
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -48,8 +50,22 @@ async function greeting(conversation: MyConversation, ctx: MyContext) {
 
   await ctx.reply(`Your address is, ${message.text}!`);
 }
-const ADDRESS_BALANCE = "balance"
+const ADDRESS_BALANCE = "balance";
 bot.use(createConversation(greeting, ADDRESS_BALANCE));
+
+// Menu
+const MAIN_MENU = "root-menu";
+const SETTINGS_SUBMENU = "settings";
+const main = new Menu(MAIN_MENU)
+  .text("Welcome", (ctx) => ctx.reply("Hi!"))
+  .row()
+  .submenu("More", SETTINGS_SUBMENU);
+bot.use(main);
+
+const settings = new Menu(SETTINGS_SUBMENU)
+  .text("Show Balance", (ctx) => ctx.reply("123"))
+  .back("<< Go Back");
+main.register(settings, MAIN_MENU);
 
 // Handle the /start command.
 const connectKeyboard = new InlineKeyboard().text(
@@ -172,6 +188,11 @@ bot.command("stop", (ctx) => {
 
 bot.command("check", async (ctx) => {
   await ctx.conversation.enter(ADDRESS_BALANCE);
+});
+
+bot.command("menu", async (ctx) => {
+  // Send the menu.
+  await ctx.reply("Check out this menu:", { reply_markup: main });
 });
 
 // Handle other messages.
