@@ -1,4 +1,4 @@
-import { Bot, InlineKeyboard, InputFile } from "grammy";
+import { Bot, Context, InlineKeyboard, InputFile, session } from "grammy";
 import { MetaMaskSDK, MetaMaskSDKOptions } from "@metamask/sdk";
 import QRCode from "qrcode";
 import {
@@ -10,9 +10,14 @@ import {
 import dotenv from "dotenv";
 dotenv.config();
 
+type MyContext = Context & ConversationFlavor;
+type MyConversation = Conversation<MyContext>;
+
 if (!process.env.BOT_TOKEN) throw new Error("BOT_TOKEN not found");
 const BOT_TOKEN = process.env.BOT_TOKEN;
-const bot = new Bot(BOT_TOKEN);
+const bot = new Bot<MyContext>(BOT_TOKEN);
+bot.use(session({ initial: () => ({}) }));
+bot.use(conversations());
 
 if (!process.env.INFURA_KEY) throw new Error("INFURA_KEY not found");
 const INFURA_KEY = process.env.INFURA_KEY;
@@ -31,6 +36,20 @@ function extractBase64Data(dataUrl: string) {
     return null;
   }
 }
+
+// Conversation
+async function greeting(conversation: MyConversation, ctx: MyContext) {
+  await ctx.reply("Hi there! What is your address?");
+  const { message } = await conversation.wait();
+  if (!message) return;
+
+  // const titleCtx = await conversation.waitFor(":text");
+  // await ctx.reply(`Welcome to the chat, ${titleCtx.msg.text}!`);
+
+  await ctx.reply(`Your address is, ${message.text}!`);
+}
+const ADDRESS_BALANCE = "balance"
+bot.use(createConversation(greeting, ADDRESS_BALANCE));
 
 // Handle the /start command.
 const connectKeyboard = new InlineKeyboard().text(
@@ -149,6 +168,10 @@ bot.command("stop", (ctx) => {
   sdk.terminate();
   sdk = null;
   ctx.reply("Terminated");
+});
+
+bot.command("check", async (ctx) => {
+  await ctx.conversation.enter(ADDRESS_BALANCE);
 });
 
 // Handle other messages.
