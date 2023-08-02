@@ -1,8 +1,12 @@
 import { Bot, InlineKeyboard, InputFile } from "grammy";
-
 import { MetaMaskSDK, MetaMaskSDKOptions } from "@metamask/sdk";
 import QRCode from "qrcode";
-
+import {
+  type Conversation,
+  type ConversationFlavor,
+  conversations,
+  createConversation,
+} from "@grammyjs/conversations";
 import dotenv from "dotenv";
 dotenv.config();
 
