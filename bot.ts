@@ -40,18 +40,34 @@ function extractBase64Data(dataUrl: string) {
 }
 
 // Conversation
-async function greeting(conversation: MyConversation, ctx: MyContext) {
+async function tokenSecurity(conversation: MyConversation, ctx: MyContext) {
   await ctx.reply("Hi there! What is your address?");
   const { message } = await conversation.wait();
   if (!message) return;
 
-  // const titleCtx = await conversation.waitFor(":text");
-  // await ctx.reply(`Welcome to the chat, ${titleCtx.msg.text}!`);
+  const options = { method: "GET" };
 
-  await ctx.reply(`Your address is, ${message.text}!`);
+  // "59140" means Linea Testnet;
+  const LINEA_TESTNET = 59140;
+  let status = 0;
+
+  try {
+    const response = await fetch(
+      `https://api.gopluslabs.io/api/v1/token_security/${LINEA_TESTNET}?contract_addresses=${message.text}`,
+      options
+    );
+
+    const data = await response.json();
+    console.log(data);
+    status = data.code;
+    await ctx.reply(`${status}, The contract is safe`);
+  } catch (err) {
+    console.error(err);
+    await ctx.reply(`The contract is NOT safe`);
+  }
 }
-const ADDRESS_BALANCE = "balance";
-bot.use(createConversation(greeting, ADDRESS_BALANCE));
+const TOKEN_SECURITY = "goplus-token-security";
+bot.use(createConversation(tokenSecurity, TOKEN_SECURITY));
 
 // Menu
 const MAIN_MENU = "root-menu";
@@ -186,8 +202,8 @@ bot.command("stop", (ctx) => {
   ctx.reply("Terminated");
 });
 
-bot.command("check", async (ctx) => {
-  await ctx.conversation.enter(ADDRESS_BALANCE);
+bot.command("goplus", async (ctx) => {
+  await ctx.conversation.enter(TOKEN_SECURITY);
 });
 
 bot.command("menu", async (ctx) => {
@@ -209,6 +225,7 @@ bot.on("message:text", async (ctx) => {
   console.log("🚀 ~ file: bot.ts:54 ~ bot.on ~ ulink:", ulink);
   const activeEthereum = sdk?.activeProvider;
   const ethereum = sdk.getProvider();
+  // ethereum.request({method: "", params: })
 
   console.log("activeProvider: ", typeof activeEthereum);
   console.log("ethereum: ", typeof ethereum);
