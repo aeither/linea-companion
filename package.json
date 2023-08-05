@@ -4,7 +4,7 @@
 	"description": "Your Telegram Bot to access Linea Blockchain",
 	"main": "bot.js",
 	"keywords": [],
-	"author": "",
+	"author": "aeither",
 	"scripts": {
 		"build": "tsc",
 		"start": "tsc && node bot.js",
