@@ -11,6 +11,7 @@ import { Menu } from "@grammyjs/menu";
 
 import dotenv from "dotenv";
 import { MaliciousAddressResponse } from "./types";
+import { ethers } from "ethers";
 dotenv.config();
 
 type MyContext = Context & ConversationFlavor;
@@ -291,6 +292,11 @@ bot.on("message:text", async (ctx) => {
 
   console.log("activeProvider: ", typeof activeEthereum);
   console.log("ethereum: ", typeof ethereum);
+
+  const provider = new ethers.providers.Web3Provider(ethereum as any)
+  const signer = provider.getSigner()
+  const address =  await signer.getAddress()
+  console.log("🚀 ~ file: bot.ts:299 ~ bot.on ~ address:", address)
 
   const chainId = await ethereum.request<string>({
     method: "eth_chainId",
