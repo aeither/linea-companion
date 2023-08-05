@@ -22,6 +22,7 @@
 		"@metamask/sdk": "^0.5.6",
 		"@thirdweb-dev/sdk": "^3.10.42",
 		"dotenv": "^16.3.1",
+		"ethers": "^5.7.2",
 		"grammy": "^1.17.2",
 		"qrcode": "^1.5.3"
 	}

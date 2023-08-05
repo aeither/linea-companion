@@ -16,6 +16,9 @@ dependencies:
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
+  ethers:
+    specifier: ^5.7.2
+    version: 5.7.2
   grammy:
     specifier: ^1.17.2
     version: 1.17.2
