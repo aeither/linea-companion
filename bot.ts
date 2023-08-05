@@ -11,6 +11,7 @@ import { Menu } from "@grammyjs/menu";
 
 import dotenv from "dotenv";
 import { MaliciousAddressResponse } from "./types";
+import { ABI } from "./abi";
 import { ethers } from "ethers";
 dotenv.config();
 
@@ -139,12 +140,18 @@ const connectKeyboard = new InlineKeyboard().text(
 );
 
 const goplusKeyboard = new InlineKeyboard()
-  .text("Malicious Address", "goplus:malicious-address").row()
-  .text("Token Security", "goplus:token-security").row()
-  .text("NFT Security", "goplus:nft-security").row()
-  .text("Security Info", "goplus:security-info").row()
-  .text("Sig Data", "goplus:signature-data").row()
-  .text("Phishing Site", "goplus:phising-site").row()
+  .text("Malicious Address", "goplus:malicious-address")
+  .row()
+  .text("Token Security", "goplus:token-security")
+  .row()
+  .text("NFT Security", "goplus:nft-security")
+  .row()
+  .text("Security Info", "goplus:security-info")
+  .row()
+  .text("Sig Data", "goplus:signature-data")
+  .row()
+  .text("Phishing Site", "goplus:phising-site")
+  .row();
 const menuKeyboard = new InlineKeyboard().text("Balance", "menu:balance");
 
 /**
@@ -248,6 +255,10 @@ bot.command("connect", async (ctx) => {
     },
   };
 
+  if (sdk) {
+    ctx.reply("Already connected");
+    return;
+  }
   sdk = new MetaMaskSDK(options);
   console.debug("connecting...");
   const accounts = await sdk.connect();
@@ -271,7 +282,47 @@ bot.command("stop", (ctx) => {
 });
 
 bot.command("goplus", async (ctx) => {
-  await ctx.reply("Fast, reliable, and convenient security services: ", { reply_markup: goplusKeyboard });
+  await ctx.reply("Fast, reliable, and convenient security services: ", {
+    reply_markup: goplusKeyboard,
+  });
+});
+
+bot.command("mint", async (ctx) => {
+  if (!sdk) {
+    ctx.reply("Start connection first");
+    return;
+  }
+
+  const contractAddress = "0xaa3c28B91f40A8ca2e8C8C4835C5Bd92c145e222";
+  const ethereum = sdk.getProvider();
+  const provider = new ethers.providers.Web3Provider(ethereum as any);
+
+  const signer = provider.getSigner();
+
+  let contract = new ethers.Contract(contractAddress, ABI, signer);
+  // Claim (Address, Uint256, Uint256, Address, Uint256, Bytes32[], Uint256, Uint256, Address, Bytes)
+  const tx = await contract.claim(
+    "0x5052936D3c98d2d045da4995d37B0DaE80C6F07f",
+    0,
+    1,
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    0,
+    {
+      proof: [],
+      quantityLimitPerWallet: "0",
+      pricePerToken: "0",
+      currency: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    },
+    []
+  );
+
+  console.log("transaction: ", tx);
+  // wait for the transaction to actually settle in the blockchain
+  await tx.wait();
+
+  await ctx.reply("Fast, reliable, and convenient security services: ", {
+    reply_markup: goplusKeyboard,
+  });
 });
 
 // Handle other messages.
@@ -283,9 +334,6 @@ bot.on("message:text", async (ctx) => {
     return;
   }
 
-  const ulink = sdk.getUniversalLink();
-  sdk.disconnect;
-  console.log("🚀 ~ file: bot.ts:54 ~ bot.on ~ ulink:", ulink);
   const activeEthereum = sdk?.activeProvider;
   const ethereum = sdk.getProvider();
   // ethereum.request({method: "", params: })
@@ -293,10 +341,10 @@ bot.on("message:text", async (ctx) => {
   console.log("activeProvider: ", typeof activeEthereum);
   console.log("ethereum: ", typeof ethereum);
 
-  const provider = new ethers.providers.Web3Provider(ethereum as any)
-  const signer = provider.getSigner()
-  const address =  await signer.getAddress()
-  console.log("🚀 ~ file: bot.ts:299 ~ bot.on ~ address:", address)
+  const provider = new ethers.providers.Web3Provider(ethereum as any);
+  const signer = provider.getSigner();
+  const address = await signer.getAddress();
+  console.log("🚀 ~ file: bot.ts:299 ~ bot.on ~ address:", address);
 
   const chainId = await ethereum.request<string>({
     method: "eth_chainId",
