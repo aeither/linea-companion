@@ -10,6 +10,7 @@ import {
 import { Menu } from "@grammyjs/menu";
 
 import dotenv from "dotenv";
+import { MaliciousAddressResponse } from "./types";
 dotenv.config();
 
 type MyContext = Context & ConversationFlavor;
@@ -41,7 +42,7 @@ function extractBase64Data(dataUrl: string) {
 
 // Conversation
 async function tokenSecurity(conversation: MyConversation, ctx: MyContext) {
-  await ctx.reply("Hi there! What is your address?");
+  await ctx.reply("What is your address?");
   const { message } = await conversation.wait();
   if (!message) return;
 
@@ -69,6 +70,53 @@ async function tokenSecurity(conversation: MyConversation, ctx: MyContext) {
 const TOKEN_SECURITY = "goplus-token-security";
 bot.use(createConversation(tokenSecurity, TOKEN_SECURITY));
 
+async function maliciousAddress(conversation: MyConversation, ctx: MyContext) {
+  await ctx.reply("What is your address?");
+  const { message } = await conversation.wait();
+  if (!message) return;
+
+  const options = { method: "GET" };
+
+  // "59140" means Linea Testnet;
+  const LINEA_TESTNET = 59140;
+
+  try {
+    const response = await fetch(
+      `https://api.gopluslabs.io/api/v1/address_security/${message.text}`,
+      options
+    );
+
+    const data: MaliciousAddressResponse = await response.json();
+    console.log(data);
+
+    await ctx.reply(
+      `cybercrime: ${data.result.cybercrime}\n` +
+        `money_laundering: ${data.result.money_laundering}\n` +
+        `number_of_malicious_contracts_created: ${data.result.number_of_malicious_contracts_created}\n` +
+        `gas_abuse: ${data.result.gas_abuse}\n` +
+        `financial_crime: ${data.result.financial_crime}\n` +
+        `darkweb_transactions: ${data.result.darkweb_transactions}\n` +
+        `reinit: ${data.result.reinit}\n` +
+        `phishing_activities: ${data.result.phishing_activities}\n` +
+        `fake_kyc: ${data.result.fake_kyc}\n` +
+        `blacklist_doubt: ${data.result.blacklist_doubt}\n` +
+        `fake_standard_interface: ${data.result.fake_standard_interface}\n` +
+        `data_source: ${data.result.data_source}\n` +
+        `stealing_attack: ${data.result.stealing_attack}\n` +
+        `blackmail_activities: ${data.result.blackmail_activities}\n` +
+        `sanctioned: ${data.result.sanctioned}\n` +
+        `malicious_mining_activities: ${data.result.malicious_mining_activities}\n` +
+        `mixer: ${data.result.mixer}\n` +
+        `honeypot_related_address: ${data.result.honeypot_related_address}\n`
+    );
+  } catch (err) {
+    console.error(err);
+    await ctx.reply(`The contract is NOT safe`);
+  }
+}
+const MALICIOUS_ADDRESS = "malicious-address";
+bot.use(createConversation(maliciousAddress, MALICIOUS_ADDRESS));
+
 // Menu
 const MAIN_MENU = "root-menu";
 const SETTINGS_SUBMENU = "settings";
@@ -89,6 +137,13 @@ const connectKeyboard = new InlineKeyboard().text(
   "connect:key"
 );
 
+const goplusKeyboard = new InlineKeyboard()
+  .text("Malicious Address", "goplus:malicious-address").row()
+  .text("Token Security", "goplus:token-security").row()
+  .text("NFT Security", "goplus:nft-security").row()
+  .text("Security Info", "goplus:security-info").row()
+  .text("Sig Data", "goplus:signature-data").row()
+  .text("Phishing Site", "goplus:phising-site").row()
 const menuKeyboard = new InlineKeyboard().text("Balance", "menu:balance");
 
 /**
@@ -115,8 +170,21 @@ bot.callbackQuery("menu:balance", async (ctx) => {
   }
 
   ctx.reply(`Your balance is: `);
-
   ctx.answerCallbackQuery(); // remove loading animation
+});
+
+bot.callbackQuery("goplus:malicious-address", async (ctx) => {
+  await ctx.conversation.enter(MALICIOUS_ADDRESS);
+
+  // ctx.reply(`Your balance is: `);
+  // ctx.answerCallbackQuery(); // remove loading animation
+});
+
+bot.callbackQuery("goplus:token-security", async (ctx) => {
+  await ctx.conversation.enter(TOKEN_SECURITY);
+
+  // ctx.reply(`Your balance is: `);
+  // ctx.answerCallbackQuery(); // remove loading animation
 });
 
 // Handle the /start command.
@@ -195,7 +263,6 @@ bot.command("stop", (ctx) => {
   }
 
   // Close previous sessions
-  //
   sdk.disconnect();
   sdk.terminate();
   sdk = null;
@@ -203,12 +270,7 @@ bot.command("stop", (ctx) => {
 });
 
 bot.command("goplus", async (ctx) => {
-  await ctx.conversation.enter(TOKEN_SECURITY);
-});
-
-bot.command("menu", async (ctx) => {
-  // Send the menu.
-  await ctx.reply("Check out this menu:", { reply_markup: main });
+  await ctx.reply("Fast, reliable, and convenient security services: ", { reply_markup: goplusKeyboard });
 });
 
 // Handle other messages.
