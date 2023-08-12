@@ -433,7 +433,7 @@ bot.command("mint", async (ctx) => {
 //   ctx.reply("Got another message!", { reply_markup: menuKeyboard });
 // });
 
-bot.command("balance", (ctx) =>
+bot.command("utility", (ctx) =>
   ctx.reply("Check Balance", { reply_markup: menuKeyboard })
 );
 
