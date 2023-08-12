@@ -155,6 +155,7 @@ const goplusKeyboard = new InlineKeyboard()
   .row();
 const menuKeyboard = new InlineKeyboard()
   .text("Balance", "menu:balance")
+  .text("Claim", "menu:claim-points")
   .text("Gas", "menu:gas");
 
 /**
@@ -229,6 +230,31 @@ bot.callbackQuery("menu:gas", async (ctx) => {
   }
 
   ctx.reply(`The gas fee is: ${data.result}`);
+  ctx.answerCallbackQuery(); // remove loading animation
+});
+
+bot.callbackQuery("menu:claim-points", async (ctx) => {
+  if (!sdk) {
+    ctx.reply("Please connect first");
+    return;
+  }
+
+  // Points Contract
+  const contractAddress = "0x2e0bB37BE1987a123e9F4290eB8a3ed377F52664";
+  const ethereum = sdk.getProvider();
+  const provider = new ethers.providers.Web3Provider(ethereum as any);
+
+  const signer = provider.getSigner();
+
+  let contract = new ethers.Contract(contractAddress, POINTS_ABI, signer);
+  ctx.reply("Approve in your wallet");
+  const tx = await contract.increasePointsBy20();
+
+  console.log("transaction: ", tx);
+  // wait for the transaction to actually settle in the blockchain
+  await tx.wait();
+
+  await ctx.reply("Points successfully claimed");
   ctx.answerCallbackQuery(); // remove loading animation
 });
 
@@ -333,31 +359,6 @@ bot.command("stop", (ctx) => {
 });
 
 bot.command("goplus", async (ctx) => {
-  await ctx.reply("Fast, reliable, and convenient security services: ", {
-    reply_markup: goplusKeyboard,
-  });
-});
-
-bot.command("addpoints", async (ctx) => {
-  if (!sdk) {
-    ctx.reply("Please connect first");
-    return;
-  }
-
-  // Points Contract
-  const contractAddress = "0x5145Dc366F25f96f219850F5aCaD50DF76eE424D";
-  const ethereum = sdk.getProvider();
-  const provider = new ethers.providers.Web3Provider(ethereum as any);
-
-  const signer = provider.getSigner();
-
-  let contract = new ethers.Contract(contractAddress, POINTS_ABI, signer);
-  const tx = await contract.increasePointsBy20();
-
-  console.log("transaction: ", tx);
-  // wait for the transaction to actually settle in the blockchain
-  await tx.wait();
-
   await ctx.reply("Fast, reliable, and convenient security services: ", {
     reply_markup: goplusKeyboard,
   });
