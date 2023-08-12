@@ -135,10 +135,6 @@ const settings = new Menu(SETTINGS_SUBMENU)
 main.register(settings, MAIN_MENU);
 
 // Handle the /start command.
-const connectKeyboard = new InlineKeyboard().text(
-  "Open Metamask Mobile",
-  "connect:key"
-);
 
 const goplusKeyboard = new InlineKeyboard()
   .text("Malicious Address", "goplus:malicious-address")
@@ -300,6 +296,12 @@ bot.command("connect", async (ctx) => {
             // console.log(url);
             const base64Data = extractBase64Data(url);
             if (!base64Data) return;
+
+            // InlineKeyboard is Here use url variable
+            const connectKeyboard = new InlineKeyboard().url(
+              "Open Metamask Mobile",
+              link
+            );
 
             var imgbase = Buffer.from(base64Data, "base64");
             ctx.replyWithPhoto(new InputFile(imgbase, "filename"));
