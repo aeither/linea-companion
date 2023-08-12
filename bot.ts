@@ -12,7 +12,8 @@ import { Menu } from "@grammyjs/menu";
 import dotenv from "dotenv";
 import { MaliciousAddressResponse } from "./types";
 import { ABI } from "./abi";
-import { ethers } from "ethers";
+import { POINTS_ABI } from "./points-abi";
+import { BigNumber, ethers } from "ethers";
 dotenv.config();
 
 type MyContext = Context & ConversationFlavor;
@@ -152,7 +153,9 @@ const goplusKeyboard = new InlineKeyboard()
   .row()
   .text("Phishing Site", "goplus:phising-site")
   .row();
-const menuKeyboard = new InlineKeyboard().text("Balance", "menu:balance");
+const menuKeyboard = new InlineKeyboard()
+  .text("Balance", "menu:balance")
+  .text("Gas", "menu:gas");
 
 /**
  * On callback, voice and text
@@ -160,10 +163,49 @@ const menuKeyboard = new InlineKeyboard().text("Balance", "menu:balance");
 bot.callbackQuery("menu:balance", async (ctx) => {
   let data;
 
+  const payload = {
+    jsonrpc: "2.0",
+    method: "eth_getBalance",
+    params: ["0x5052936d3c98d2d045da4995d37b0dae80c6f07f", "latest"],
+    id: "59140",
+  };
   const options = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: '{"jsonrpc":"2.0","id":1,"method":"eth_blockNumber","params":[]}',
+    body: JSON.stringify(payload),
+  };
+
+  try {
+    const response = await fetch(
+      `https://linea-goerli.infura.io/v3/${INFURA_KEY}`,
+      // `https://linea-mainnet.infura.io/v3/${INFURA_KEY}`,
+      options
+    );
+    data = await response.json();
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+  }
+
+  const balance = BigNumber.from(data.result).toString();
+  const formattedBalance = ethers.utils.formatUnits(balance, 18);
+  ctx.reply(`Your balance is: ${formattedBalance} eth`);
+  ctx.answerCallbackQuery(); // remove loading animation
+});
+
+bot.callbackQuery("menu:gas", async (ctx) => {
+  let data;
+
+  const payload = {
+    jsonrpc: "2.0",
+    method: "eth_gasPrice",
+    params: [],
+    id: "1",
+  };
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
   };
 
   try {
@@ -177,7 +219,7 @@ bot.callbackQuery("menu:balance", async (ctx) => {
     console.error(err);
   }
 
-  ctx.reply(`Your balance is: `);
+  ctx.reply(`The gas fee is: ${data.result}`);
   ctx.answerCallbackQuery(); // remove loading animation
 });
 
@@ -270,7 +312,7 @@ bot.command("connect", async (ctx) => {
 bot.command("stop", (ctx) => {
   console.log("stop");
   if (!sdk) {
-    ctx.reply("Start connection first");
+    ctx.reply("Please connect first");
     return;
   }
 
@@ -287,9 +329,34 @@ bot.command("goplus", async (ctx) => {
   });
 });
 
+bot.command("addpoints", async (ctx) => {
+  if (!sdk) {
+    ctx.reply("Please connect first");
+    return;
+  }
+
+  // Points Contract
+  const contractAddress = "0x5145Dc366F25f96f219850F5aCaD50DF76eE424D";
+  const ethereum = sdk.getProvider();
+  const provider = new ethers.providers.Web3Provider(ethereum as any);
+
+  const signer = provider.getSigner();
+
+  let contract = new ethers.Contract(contractAddress, POINTS_ABI, signer);
+  const tx = await contract.increasePointsBy20();
+
+  console.log("transaction: ", tx);
+  // wait for the transaction to actually settle in the blockchain
+  await tx.wait();
+
+  await ctx.reply("Fast, reliable, and convenient security services: ", {
+    reply_markup: goplusKeyboard,
+  });
+});
+
 bot.command("mint", async (ctx) => {
   if (!sdk) {
-    ctx.reply("Start connection first");
+    ctx.reply("Please connect first");
     return;
   }
 
@@ -326,33 +393,45 @@ bot.command("mint", async (ctx) => {
 });
 
 // Handle other messages.
-bot.on("message:text", async (ctx) => {
-  console.debug(`start NodeJS example`);
+// bot.on("message:text", async (ctx) => {
+//   console.debug(`Start Telegram Bot`);
 
-  if (!sdk) {
-    ctx.reply("Start connection first");
-    return;
-  }
+//   if (!sdk) {
+//     ctx.reply("Please connect first");
+//     return;
+//   }
 
-  const activeEthereum = sdk?.activeProvider;
-  const ethereum = sdk.getProvider();
-  // ethereum.request({method: "", params: })
+//   const activeEthereum = sdk?.activeProvider;
+//   const ethereum = sdk.getProvider();
+//   // ethereum.request({method: "", params: })
 
-  console.log("activeProvider: ", typeof activeEthereum);
-  console.log("ethereum: ", typeof ethereum);
+//   console.log("activeProvider: ", typeof activeEthereum);
+//   console.log("ethereum: ", typeof ethereum);
 
-  const provider = new ethers.providers.Web3Provider(ethereum as any);
-  const signer = provider.getSigner();
-  const address = await signer.getAddress();
-  console.log("🚀 ~ file: bot.ts:299 ~ bot.on ~ address:", address);
+//   const provider = new ethers.providers.Web3Provider(ethereum as any);
+//   const signer = provider.getSigner();
+//   const address = await signer.getAddress();
+//   console.log("🚀 ~ file: bot.ts:299 ~ bot.on ~ address:", address);
 
-  const chainId = await ethereum.request<string>({
-    method: "eth_chainId",
-    params: [],
-  });
-  console.debug("chainId: ", chainId);
-  ctx.reply("Got another message!", { reply_markup: menuKeyboard });
-});
+//   const chainId = await ethereum.request<string>({
+//     method: "eth_chainId",
+//     params: [],
+//   });
+//   console.debug("chainId: ", chainId);
+//   ctx.reply("Got another message!", { reply_markup: menuKeyboard });
+// });
+
+bot.command("balance", (ctx) =>
+  ctx.reply("Check Balance", { reply_markup: menuKeyboard })
+);
+
+bot.command("help", (ctx) => ctx.reply(HELP_MESSAGE));
+
+export const HELP_MESSAGE =
+  "Hey, 👋!, \n" +
+  "Seamlessly connect your wallet, monitor your balance, \n" +
+  "earn valuable points, mint NFTs, and ensure contract address security, all in one place. \n\n" +
+  "Get started with Linea experience with our feature-packed bot. \n\n";
 
 // Now that you specified how to handle messages, you can start your bot.
 // This will connect to the Telegram servers and wait for messages.
