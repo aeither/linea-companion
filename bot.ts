@@ -163,10 +163,19 @@ const menuKeyboard = new InlineKeyboard()
 bot.callbackQuery("menu:balance", async (ctx) => {
   let data;
 
+  if (!sdk) {
+    ctx.reply("Please connect first");
+    return;
+  }
+  const ethereum = sdk.getProvider();
+  const provider = new ethers.providers.Web3Provider(ethereum as any);
+  const signer = provider.getSigner();
+  const address = await signer.getAddress();
+
   const payload = {
     jsonrpc: "2.0",
     method: "eth_getBalance",
-    params: ["0x5052936d3c98d2d045da4995d37b0dae80c6f07f", "latest"],
+    params: [address, "latest"],
     id: "59140",
   };
   const options = {
