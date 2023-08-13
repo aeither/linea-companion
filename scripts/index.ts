@@ -18,6 +18,7 @@ const commands: BotCommand[] = [
     description: "Disconnect wallet",
   },
   { command: "goplus", description: "Check smart contract security" },
+  { command: "help", description: "Help" },
 ];
 
 /**
