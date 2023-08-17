@@ -14,6 +14,7 @@
 # Linea Companion
 
 - [Go to Telegram](https://t.me/LineaCompanionBot)
+- To try out, please follow the the instructions to run the Telegram Bot locally as there are still some issues with the live bot, currently confronting with Consensys Team on Discord.
 
 ## Instruction
 
@@ -56,7 +57,7 @@ sdk = new MetaMaskSDK(options);
 const accounts = await sdk.connect();
 ```
 
-### Get wallet statistics like balance with infura
+### Get wallet statistics like balance with Infura
 
 ```jsx
   const payload = {
@@ -139,6 +140,14 @@ const accounts = await sdk.connect();
 ## Technology used
 
 grammyjs, typescript, ethers, solidity, metamask SDK, infura, GoPlus, thirdweb
+
+## Deployed contracts
+
+Thirdweb NFT contract on Linea Testnet
+https://explorer.goerli.linea.build/address/0xaa3c28B91f40A8ca2e8C8C4835C5Bd92c145e222
+
+Gamified Points smart contract. The source of the smart contract can be found under `/contracts` folder
+https://explorer.goerli.linea.build/address/0x2e0bB37BE1987a123e9F4290eB8a3ed377F52664
 
 ## Future plans
 
