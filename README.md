@@ -15,6 +15,20 @@
 
 - [Go to Telegram](https://t.me/LineaCompanionBot)
 
+## Instruction
+
+Create `.env` file and add INFURA_KEY from infura dashboard linea testnet. BOT_TOKEN from Telegram BotFather Bot.
+
+Run the following commands in the terminal.
+
+```bash
+pnpm install
+```
+
+```bash
+pnpm run dev
+```
+
 ## Summary
 
 Seamlessly connect your wallet, monitor your balance, earn valuable points, mint NFTs, and ensure smart contracts security, all in one place. Linea Companion helps you get started with Linea.
