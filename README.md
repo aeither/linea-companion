@@ -14,13 +14,13 @@
 # Linea Companion
 
 - [Go to Telegram](https://t.me/LineaCompanionBot)
-- To try out, please follow the the instructions to run the Telegram Bot locally as there are still some issues with the live bot, currently confronting with Consensys Team on Discord.
+- To test, follow the instructions to run the Telegram Bot locally. Live bot has issues, addressing with Consensys Team on Discord.
 
 ## Instruction
 
-Create `.env` file and add INFURA_KEY from infura dashboard linea testnet. BOT_TOKEN from Telegram BotFather Bot.
+Generate a `.env` file and include `INFURA_KEY` from your Infura dashboard's Linea testnet section, as well as `BOT_TOKEN` obtained from Telegram's BotFather.
 
-Run the following commands in the terminal.
+Execute the subsequent commands in your terminal.
 
 ```bash
 pnpm install
@@ -30,23 +30,25 @@ pnpm install
 pnpm run dev
 ```
 
+Access and initiate the bot on Telegram.
+
 ## Summary
 
-Seamlessly connect your wallet, monitor your balance, earn valuable points, mint NFTs, and ensure smart contracts security, all in one place. Linea Companion helps you get started with Linea.
+Effortlessly link your wallet, track balances, earn points, mint NFTs, and ensure smart contract security, all within a unified platform. Linea Companion simplifies your Linea experience from the beginning.
 
 Why we built it
-- Share private keys to Telegram bot is risky
-- Risky first smart contracts on new blockchains
-- Need for better mobile experience
+- Eliminating the risk of sharing private keys with a Telegram bot
+- Risky initial smart contracts on emerging blockchains
+- Addressing the demand for an enhanced mobile user experience
 
 What we built
-- Quickly and securely connect with Metamask Mobile without sharing private key
-- Check smart contracts safety
-- Intuitive first steps to get users onboarded on mobile
+- Swift and secure integration with Metamask Mobile, eliminating the need to share private keys
+- Assessment of smart contract security
+- User-friendly initial onboarding steps for a seamless mobile experience
 
 ## Features
 
-### Connect wallet with Metamask SDK in Telegram
+### Establish wallet connection using the Metamask SDK within Telegram
 
 <img src="https://github.com/aeither/linea-companion/assets/36173828/a23e80dd-2b53-4bec-a9c0-7b464ed4ddfb" alt="Logo" width="420" >
 
@@ -57,7 +59,7 @@ sdk = new MetaMaskSDK(options);
 const accounts = await sdk.connect();
 ```
 
-### Get wallet statistics like balance with Infura
+### Retrieve wallet statistics such as balance using Infura
 
 ```jsx
   const payload = {
@@ -82,7 +84,7 @@ const accounts = await sdk.connect();
   }
 ```
 
-### Mint First NFT on Linea to experience the blockchain speed and low fee with ethers + thirdweb contract
+### Mint inaugural NFT on Linea to encounter the swiftness and cost-efficiency of the blockchain, utilizing ethers and the ThirdWeb contract
 
 ```jsx
   const ethereum = sdk.getProvider();
@@ -108,7 +110,7 @@ const accounts = await sdk.connect();
   );
 ```
 
-### Claim points to use Linea Companion Bot for future utility
+### Acquire points to unlock the future utility of the bot
 
 ```jsx
   const ethereum = sdk.getProvider();
@@ -126,7 +128,7 @@ const accounts = await sdk.connect();
   await ctx.reply("Points successfully claimed");
 ```
 
-### Make sure the contract of protocols are secure with GoPlus
+### Ensure the security of protocol contracts using GoPlus
 
 ```jsx
     const response = await fetch(
@@ -139,7 +141,14 @@ const accounts = await sdk.connect();
 
 ## Technology used
 
-grammyjs, typescript, ethers, solidity, metamask SDK, infura, GoPlus, thirdweb
+- grammyjs
+- TypeScript
+- ethers
+- Solidity
+- Metamask SDK
+- Infura
+- GoPlus
+- ThirdWeb
 
 ## Deployed contracts
 
@@ -151,10 +160,9 @@ https://explorer.goerli.linea.build/address/0x2e0bB37BE1987a123e9F4290eB8a3ed377
 
 ## Future plans
 
-- Deploy on mainnet
-- Add Bridge functionality
-- Add Swap functionality
-- Make bot callable from groups
+- Mainnet Deployment
+- Incorporation of Bridge Functionality
+- Integration of Swap Functionality
+- Enable Group Access for Bot
 - Portfolio Dashboard
 
-...
