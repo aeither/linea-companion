@@ -17,21 +17,21 @@
 
 ## Summary
 
-Seamlessly connect your wallet, monitor your balance, earn valuable points, mint NFTs, and ensure contract address security, all in one place. Get started with Linea experience with our feature-packed bot
+Seamlessly connect your wallet, monitor your balance, earn valuable points, mint NFTs, and ensure smart contracts security, all in one place. Linea Companion helps you get started with Linea.
 
 Why we built it
 - Share private keys to Telegram bot is risky
+- Risky first smart contracts on new blockchains
 - Need for better mobile experience
-- Not clear path to explore Linea
 
 What we built
 - Quickly and securely connect with Metamask Mobile without sharing private key
-- Telegram bot offering a user-friendly and intuitive interface
-- First steps to get users onboarded
+- Check smart contracts safety
+- Intuitive first steps to get users onboarded on mobile
 
 ## Features
 
-Connect with Metamask Mobile in Telegram
+### Connect wallet with Metamask SDK in Telegram
 
 <img src="https://github.com/aeither/linea-companion/assets/36173828/a23e80dd-2b53-4bec-a9c0-7b464ed4ddfb" alt="Logo" width="420" >
 
@@ -41,6 +41,33 @@ const options: MetaMaskSDKOptions = { ... }
 sdk = new MetaMaskSDK(options);
 const accounts = await sdk.connect();
 ```
+
+### Get wallet statistics like balance with infura
+
+```jsx
+  const payload = {
+    jsonrpc: "2.0",
+    method: "eth_getBalance",
+    params: [address, "latest"],
+    id: "59140",
+  };
+  const options = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  };
+
+  try {
+    const response = await fetch(
+      `https://linea-goerli.infura.io/v3/${INFURA_KEY}`,
+      options
+    );
+    data = await response.json();
+    // ...
+  }
+```
+
+### Mint First NFT on Linea to experience the blockchain speed and low fee
 
 ## Technology used
 
