@@ -81,12 +81,71 @@ const accounts = await sdk.connect();
   }
 ```
 
-### Mint First NFT on Linea to experience the blockchain speed and low fee
+### Mint First NFT on Linea to experience the blockchain speed and low fee with ethers + thirdweb contract
+
+```jsx
+  const ethereum = sdk.getProvider();
+  const provider = new ethers.providers.Web3Provider(ethereum as any);
+
+  const signer = provider.getSigner();
+
+  let contract = new ethers.Contract(contractAddress, ABI, signer);
+  // Claim (Address, Uint256, Uint256, Address, Uint256, Bytes32[], Uint256, Uint256, Address, Bytes)
+  const tx = await contract.claim(
+    userAddress,
+    0,
+    1,
+    "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    0,
+    {
+      proof: [],
+      quantityLimitPerWallet: "0",
+      pricePerToken: "0",
+      currency: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    },
+    []
+  );
+```
+
+### Claim points to use Linea Companion Bot for future utility
+
+```jsx
+  const ethereum = sdk.getProvider();
+  const provider = new ethers.providers.Web3Provider(ethereum as any);
+  const signer = provider.getSigner();
+
+  let contract = new ethers.Contract(contractAddress, POINTS_ABI, signer);
+  ctx.reply("Approve in your wallet");
+  const tx = await contract.increasePointsBy20();
+
+  console.log("transaction: ", tx);
+  // wait for the transaction to actually settle in the blockchain
+  await tx.wait();
+
+  await ctx.reply("Points successfully claimed");
+```
+
+### Make sure the contract of protocols are secure with GoPlus
+
+```jsx
+    const response = await fetch(
+      `https://api.gopluslabs.io/api/v1/token_security/${LINEA_TESTNET}?contract_addresses=${message.text}`,
+      options
+    );
+
+    const data = await response.json();
+```
 
 ## Technology used
 
-grammyjs, typescript, ethers, solidity, metamask SDK, infura, go-plus, thirdweb
+grammyjs, typescript, ethers, solidity, metamask SDK, infura, GoPlus, thirdweb
 
-## More
+## Future plans
+
+- Deploy on mainnet
+- Add Bridge functionality
+- Add Swap functionality
+- Make bot callable from groups
+- Portfolio Dashboard
 
 ...
