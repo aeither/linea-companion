@@ -6,7 +6,7 @@
 
 <h3 align="center">Linea Companion</h3>
   <p align="center">
-    Start your Linea journey quickly on Telegram
+    Seamless gamified onboarding to Linea with Metamask Mobile on Telegram
     <br />
   </p>
 </div>
