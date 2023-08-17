@@ -153,9 +153,11 @@ const accounts = await sdk.connect();
 ## Deployed contracts
 
 Thirdweb NFT contract on Linea Testnet
+
 https://explorer.goerli.linea.build/address/0xaa3c28B91f40A8ca2e8C8C4835C5Bd92c145e222
 
 Gamified Points smart contract. The source of the smart contract can be found under `/contracts` folder
+
 https://explorer.goerli.linea.build/address/0x2e0bB37BE1987a123e9F4290eB8a3ed377F52664
 
 ## Future plans
