@@ -273,7 +273,7 @@ bot.command("connect", async (ctx) => {
   const options: MetaMaskSDKOptions = {
     shouldShimWeb3: false,
     dappMetadata: {
-      name: "NodeJS example",
+      name: "Linea Companion",
     },
     logging: {
       sdk: false,
