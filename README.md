@@ -13,8 +13,8 @@
 
 # Linea Companion
 
-- [Go to Telegram](https://t.me/LineaCompanionBot)
-- To test, follow the instructions to run the Telegram Bot locally. Live bot has issues, addressing with Consensys Team on Discord.
+- [Live deployment at](https://t.me/LineaCompanionBot). Live bot has connection issues, addressing with Consensys Team on Discord.
+- To test the working version, follow the instructions below to run the Telegram Bot locally. 
 
 ## Instruction
 
@@ -31,6 +31,8 @@ pnpm run dev
 ```
 
 Access and initiate the bot on Telegram.
+
+If can not connect and you see `.sdk-comm` file created. This file should be removed and restart the server to make it work again.
 
 ## Summary
 
