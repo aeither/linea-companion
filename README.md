@@ -168,3 +168,8 @@ https://explorer.goerli.linea.build/address/0x2e0bB37BE1987a123e9F4290eB8a3ed377
 - Enable Group Access for Bot
 - Portfolio Dashboard
 
+## Screenshots
+
+![go-plus](https://github.com/aeither/linea-companion/assets/36173828/ff41c955-ad17-4171-894c-cb585036cd6e)
+
+![infura](https://github.com/aeither/linea-companion/assets/36173828/8d0b2dd8-6d46-4080-b525-44f86a8b8a0b)
