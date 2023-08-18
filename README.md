@@ -1,7 +1,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/aeither/azuro-telegram-bot">
-    <img src="https://github.com/aeither/linea-companion/assets/36173828/f2a8e5f6-da3c-49d6-908a-2c2706dddc19" alt="Logo" width="120" >
+    <img src="https://github.com/aeither/linea-companion/assets/36173828/aac8b80a-0dd0-4ed5-81ad-6de9f292046e" alt="Logo" width="120" >
   </a>
 
 <h3 align="center">Linea Companion</h3>
@@ -172,6 +172,6 @@ https://explorer.goerli.linea.build/address/0x2e0bB37BE1987a123e9F4290eB8a3ed377
 
 ## Screenshots
 
-![go-plus](https://github.com/aeither/linea-companion/assets/36173828/ff41c955-ad17-4171-894c-cb585036cd6e)
+![1](https://github.com/aeither/linea-companion/assets/36173828/56efccfd-3ad7-4785-a024-34e19e7c5529)
 
-![infura](https://github.com/aeither/linea-companion/assets/36173828/8d0b2dd8-6d46-4080-b525-44f86a8b8a0b)
+![2](https://github.com/aeither/linea-companion/assets/36173828/259168e0-3311-47b8-ba7a-08fdd05941ab)
